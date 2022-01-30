@@ -1,7 +1,7 @@
 ﻿  ConfigReader.cpp
-D:\_Repositories\Neuer Ordner\JSONConfigReader\ConfigReader\ConfigReader.cpp(29,36): warning C4101: "e": Unreferenzierte lokale Variable
-D:\_Repositories\Neuer Ordner\JSONConfigReader\ConfigReader\ConfigReader.cpp(69,43): warning C4129: "/": nicht erkannte Folge von Escapesequenz
+D:\_Repositories\Projects\Neuer Ordner\JSONConfigReader\ConfigReader\ConfigReader.cpp(30,36): warning C4101: "e": Unreferenzierte lokale Variable
+D:\_Repositories\Projects\Neuer Ordner\JSONConfigReader\ConfigReader\ConfigReader.cpp(148,43): warning C4129: "/": nicht erkannte Folge von Escapesequenz
   json.cpp
   main.cpp
   Code wird generiert...
-  ConfigReader.vcxproj -> D:\_Repositories\Neuer Ordner\JSONConfigReader\Debug\ConfigReader.exe
+  ConfigReader.vcxproj -> D:\_Repositories\Projects\Neuer Ordner\JSONConfigReader\Debug\ConfigReader.exe
