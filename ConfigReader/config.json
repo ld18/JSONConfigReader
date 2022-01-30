@@ -1,0 +1,29 @@
+{
+  "MPU6050": {
+    "GYRO_FS_SEL": 0,
+    "ACCEL_FS_SEL": 0,
+    "DLPF_CFG": 3,
+    "SMPLRT_DIV": 7
+  },
+  "BMP280": {
+    "Oversampling_Temperature": 142,
+    "Oversampling_Pressure": 0,
+    "IIR_Filter_Timeconstant": {
+      "a": 1,
+      "2": 1
+    }
+  },
+  "I2C": {
+    "Adapter": "/dev/i2c-1",
+    "ValuArray": [
+      5, 6, 7, 11, -4
+    ]
+  },
+  "Log": {
+    "Measrument_Filepath": "../logging/logs/"
+  },
+  "Adapter_INT": -12,
+  "Adapter_STR": "TESTSTRING",
+  "Adapter_FLOAT": -0.21,
+  "Adapter_BOOL": false
+}
