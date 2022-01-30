@@ -25,16 +25,16 @@ bool ConfigReader::loadConfogfile(const string& path) {
 	try {
 		jsonDoc = json::jobject::parse(file_string);
 		dirty.store(false);
+		mutex.unlock();
 	}
 	catch (const json::parsing_error& e) {
+		mutex.unlock();
 		return false;
 	}
-	mutex.unlock();
 	return true;
 }
 
-template<typename T>
-T ConfigReader::get(const string& Keys) {
+int ConfigReader::get_int(const string& Keys) {
 	mutex.lock_shared();
 	if (! dirty.load()) {
 		vector<string> subKeys;
@@ -43,7 +43,7 @@ T ConfigReader::get(const string& Keys) {
 		for (unsigned int i = 0; i < subKeys.size() - 1; i++) {
 			obj = obj[subKeys[i]].as_object();
 		}
-		auto value = (T)obj[subKeys.back()];
+		auto value = (int)obj[subKeys.back()];
 		mutex.unlock_shared();
 		return value;
 	}
@@ -52,11 +52,90 @@ T ConfigReader::get(const string& Keys) {
 		throw new invalid_argument("ConfigReader::get cant open file because it is dirty");
 	}
 }
-
-template<typename T>
-T ConfigReader::get(const string& Keys, const T& defaultValue) {
+int ConfigReader::get_int(const string& Keys, const int& defaultValue) {
 	try {
-		return ConfigReader::get<T>(Keys);
+		return ConfigReader::get_int(Keys);
+	}
+	catch (const json::invalid_key) {
+		return defaultValue;
+	}
+}
+
+string ConfigReader::get_string(const string& Keys) {
+	mutex.lock_shared();
+	if (! dirty.load()) {
+		vector<string> subKeys;
+		ConfigReader::splitPath(Keys, subKeys);
+		json::jobject obj = jsonDoc;
+		for (unsigned int i = 0; i < subKeys.size() - 1; i++) {
+			obj = obj[subKeys[i]].as_object();
+		}
+		auto value = (string)obj[subKeys.back()];
+		mutex.unlock_shared();
+		return value;
+	}
+	else {
+		mutex.unlock_shared();
+		throw new invalid_argument("ConfigReader::get cant open file because it is dirty");
+	}
+}
+string ConfigReader::get_string(const string& Keys, const string& defaultValue) {
+	try {
+		return ConfigReader::get_string(Keys);
+	}
+	catch (const json::invalid_key) {
+		return defaultValue;
+	}
+}
+
+float ConfigReader::get_float(const string& Keys) {
+	mutex.lock_shared();
+	if (! dirty.load()) {
+		vector<string> subKeys;
+		ConfigReader::splitPath(Keys, subKeys);
+		json::jobject obj = jsonDoc;
+		for (unsigned int i = 0; i < subKeys.size() - 1; i++) {
+			obj = obj[subKeys[i]].as_object();
+		}
+		auto value = (float)obj[subKeys.back()];
+		mutex.unlock_shared();
+		return value;
+	}
+	else {
+		mutex.unlock_shared();
+		throw new invalid_argument("ConfigReader::get cant open file because it is dirty");
+	}
+}
+float ConfigReader::get_float(const string& Keys, const float& defaultValue) {
+	try {
+		return ConfigReader::get_float(Keys);
+	}
+	catch (const json::invalid_key) {
+		return defaultValue;
+	}
+}
+
+bool ConfigReader::get_bool(const string& Keys) {
+	mutex.lock_shared();
+	if (! dirty.load()) {
+		vector<string> subKeys;
+		ConfigReader::splitPath(Keys, subKeys);
+		json::jobject obj = jsonDoc;
+		for (unsigned int i = 0; i < subKeys.size() - 1; i++) {
+			obj = obj[subKeys[i]].as_object();
+		}
+		auto value = (bool)obj[subKeys.back()];
+		mutex.unlock_shared();
+		return value;
+	}
+	else {
+		mutex.unlock_shared();
+		throw new invalid_argument("ConfigReader::get cant open file because it is dirty");
+	}
+}
+bool ConfigReader::get_bool(const string& Keys, const bool& defaultValue) {
+	try {
+		return ConfigReader::get_bool(Keys);
 	}
 	catch (const json::invalid_key) {
 		return defaultValue;
