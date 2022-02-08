@@ -1,48 +1,39 @@
-
 #include <iostream>
-#include <string>
-#include <assert.h>
 #include "ConfigReader.h"
 
 using namespace std;
 
-string relativePathToConfigFile = "config.json";
-
 int main() {
-	cout << "Started Main" << endl;
-	ConfigReader::loadConfogfile(relativePathToConfigFile);
+	cout << "Start" << endl << endl;
 
-	cout << "get Value " << ConfigReader::get_int("Adapter_INT") << endl;
-	cout << "get Value " << ConfigReader::get_float("Adapter_FLOAT") << endl;
-	cout << "get Value " << ConfigReader::get_string("Adapter_STR") << endl;
-	cout << "get Value " << ConfigReader::get_bool("Adapter_BOOL") << endl;
-	cout << "get Value " << ConfigReader::get_int("BMP280/Oversampling_Temperature") << endl;
+	ConfigReader cr("config.json");
 
-	assert(ConfigReader::get_int("Adapter_INT") == -12);
-	assert(ConfigReader::get_int("Adapter_INT_WRONG", -111) == -111);
-	assert(ConfigReader::get_int("Adapter_FLOAT") == 0);
-	assert(ConfigReader::get_int("MPU6050/GYRO_FS_SEL") == 0);
-	assert(ConfigReader::get_int("MPU6050/NOT/GYRO_FS_SEL", -111) == -111);
-	assert(ConfigReader::get_int("BMP280/IIR_Filter_Timeconstant/2", -111) == 1);
-	//assert(ConfigReader::get_int>("I2C/ValuArray/2", -111) == 7);
+	cout << cr.get<int>("Peak_Detector/arr/0") << endl;
+	cout << cr.get<int>("Peak_Detector/arr/1") << endl; 
+	cout << cr.get<int>("Peak_Detector/arr/2") << endl;
+	cout << cr.get<int>("Peak_Detector/arr/3/accel_threshold") << endl;
+	cout << cr.get<int>("Peak_Detector/level1/level2") << endl;
 
-	assert(ConfigReader::get_float("Adapter_FLOAT") + 0.21 < 0.001);
-	assert(ConfigReader::get_float("Adapter_FLOAT_NOT", -111) + 111 < 0.001);
-	assert(ConfigReader::get_float("Adapter_INT") + 12.0 < 0.001);
-	assert(ConfigReader::get_float("MPU6050/GYRO_FS_SEL") + 0.0 < 0.001);
-	assert(ConfigReader::get_float("MPU6050/NOT/GYRO_FS_SEL", -111) + 111.0 < 0.001);
+	cout << cr.get<int>("MPU6050/SMPLRT_DIV") << endl;
+	cout << cr.get<string>("I2C/Adapter") << endl;
+	cout << cr.get<int>("Drop_Detector/threshold") << endl;
+	cout << cr.get<float>("Drop_Detector/threshold") << endl;
+	cout << cr.get<double>("Drop_Detector/threshold") << endl;
+	cout << cr.get<unsigned long>("Drop_Detector/threshold") << endl;
+	cout << cr.get<bool>("MPU6050/useFIFO") << endl;
 
-	assert(ConfigReader::get_bool("Adapter_BOOL") == false);
-	assert(ConfigReader::get_bool("Adapter_FLOAT_NOT", true) == true);
-	assert(ConfigReader::get_bool("MPU6050/NOT/GYRO_FS_SEL", true) == true);
-	assert(ConfigReader::get_bool("MPU6050/GYRO_FS_SEL") == false);
+	cout << cr.get<bool>("MPU6050/useFALSEFIFO", false) << endl;
+	cout << cr.get<bool>("MPU6050/useFALSEFIFO", true) << endl;
 
-	assert(ConfigReader::get_string("Adapter_INT") == "-12");
-	assert(ConfigReader::get_string("Adapter_STR") == "TESTSTRING");
-	assert(ConfigReader::get_string("Adapter_FLOAT") == "-0.21");
-	assert(ConfigReader::get_string("Adapter_BOOL") == "false");
-	assert(ConfigReader::get_string("MPU6050/NOT/GYRO_FS_SEL", "nIO") == "nIO");
+	bool tmp;
+	cout << cr.get<bool>("MPU6050/useFIFO", false, tmp);
+	cout << tmp << " " << endl;
+	cout << cr.get<bool>("MPU6050/useFALSEFIFO", false, tmp);
+	cout << tmp << " " << endl;
+	cout << cr.get<bool>("MPU6050/useFALSEFIFO", true, tmp);
+	cout << tmp << " " << endl;
 
-	cout << "Ended Main" << endl;
+
+	cout << endl << "End" << endl;
 	return 0;
 }

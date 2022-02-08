@@ -1,29 +1,45 @@
 {
   "MPU6050": {
+    "useFIFO": true,
+    "useInt": false,
+    "cycle": false,
+
+    "TEMP_FIFO_EN": true,
+    "GYRO_FIFO_EN": true,
+    "ACCEL_FIFO_EN": true,
+
+    "LP_WAKE_CTRL": 0,
+
     "GYRO_FS_SEL": 0,
     "ACCEL_FS_SEL": 0,
-    "DLPF_CFG": 3,
-    "SMPLRT_DIV": 7
+    "DLPF_CFG": 0,
+    "SMPLRT_DIV": 70
   },
   "BMP280": {
-    "Oversampling_Temperature": 142,
+    "Oversampling_Temperature": 0,
     "Oversampling_Pressure": 0,
-    "IIR_Filter_Timeconstant": {
-      "a": 1,
-      "2": 1
-    }
+    "IIR_Filter_Timeconstant": 0
   },
   "I2C": {
-    "Adapter": "/dev/i2c-1",
-    "ValuArray": [
-      5, 6, 7, 11, -4
-    ]
+    "Adapter": "/dev/i2c-1"
   },
   "Log": {
     "Measrument_Filepath": "../logging/logs/"
   },
-  "Adapter_INT": -12,
-  "Adapter_STR": "TESTSTRING",
-  "Adapter_FLOAT": -0.21,
-  "Adapter_BOOL": false
+  "Drop_Detector": {
+    "threshold": 2.455
+  },
+  "Peak_Detector":{
+    "arr": [
+      1,
+      3,
+      5,
+      { "accel_threshold": 43 }
+    ],
+    "accel_threshold": 2,
+    "gyro_threshold": 250,
+    "level1": {
+      "level2" :  -4
+    }
+  }
 }

@@ -27,7 +27,7 @@ namespace json
 		 *
 		 * @param key The key that was not valid
 		 */
-		inline invalid_key(const std::string &key) : key(key) { }
+		inline invalid_key(const std::string & message) : key(message) { }
 
 		/*! \brief Destructor */
 		inline virtual ~invalid_key() throw() { }
@@ -47,7 +47,7 @@ namespace json
 		 *
 		 * @param message Details regarding the parsing error
 		 */
-		inline parsing_error(const char *message) : std::invalid_argument(message) { }
+		inline parsing_error(const std::string& message) : std::invalid_argument(message) { }
 
 		/*! \brief Destructor */
 		inline virtual ~parsing_error() throw() { }
