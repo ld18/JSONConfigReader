@@ -10,7 +10,6 @@ using std::regex;
 
 ConfigReader::ConfigReader(const string & path) {
 	unique_lock<shared_mutex> uniqueLock(mutex);
-	dirty.store(true);
 	ifstream file(path, ifstream::in);
 	if (!file.is_open() || !file.good()) {
 		throw new parsing_error("ConfigReader cant open file, path: " + path);
@@ -18,9 +17,7 @@ ConfigReader::ConfigReader(const string & path) {
 	string file_string((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 	try {
 		jsonDoc = json::jobject::parse(file_string);
-		dirty.store(false);
-	}
-	catch (const json::parsing_error&) {
+	} catch (const json::parsing_error&) {
 		throw new parsing_error("ConfigReader encountered parsing error, path: " + path);
 	}
 }
