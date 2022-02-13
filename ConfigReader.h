@@ -22,14 +22,15 @@ using std::is_same;
 
 class ConfigReader {
 public:
-	ConfigReader() = delete;
+	ConfigReader() = default;
 	ConfigReader(const string& path);
+	void readConfigFile(const string& path);
 
 	template < typename T, class = typename enable_if<is_arithmetic<T>::value || is_same<string, T>::value>::type>
 	T get(const string& Keys) const {
-		shared_lock<shared_mutex> sharedLock(mutex);
 		vector<string> subKeys;
 		splitPath(Keys, subKeys);
+		shared_lock<shared_mutex> sharedLock(mutex);
 		json::jobject obj = jsonDoc;
 		for (unsigned int i = 0; i < subKeys.size() - 1; i++) {
 			if (obj.is_array()) {

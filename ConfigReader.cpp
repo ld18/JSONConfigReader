@@ -8,7 +8,11 @@ using std::ifstream;
 using std::smatch;
 using std::regex;
 
-ConfigReader::ConfigReader(const string & path) {
+ConfigReader::ConfigReader(const string& path) {
+	readConfigFile(path);
+}
+
+void ConfigReader::readConfigFile(const string& path) {
 	unique_lock<shared_mutex> uniqueLock(mutex);
 	ifstream file(path, ifstream::in);
 	if (!file.is_open() || !file.good()) {
@@ -17,7 +21,8 @@ ConfigReader::ConfigReader(const string & path) {
 	string file_string((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
 	try {
 		jsonDoc = json::jobject::parse(file_string);
-	} catch (const json::parsing_error&) {
+	}
+	catch (const json::parsing_error&) {
 		throw new parsing_error("ConfigReader encountered parsing error, path: " + path);
 	}
 }
