@@ -5,12 +5,14 @@
 #include <shared_mutex>
 #include <vector>
 #include <type_traits>
+#include <atomic>
 #include "json.h"
 
 #define regexExpression_KeySeperator "[^\/]+"
 
 using std::string;
 using std::stoi;
+using std::atomic;
 using std::shared_mutex;
 using std::shared_lock;
 using std::unique_lock;
@@ -23,6 +25,8 @@ using std::is_same;
 class ConfigReader {
 public:
 	ConfigReader() = default;
+	ConfigReader(ConfigReader&) = delete;
+	ConfigReader& operator=(const ConfigReader&) = delete;
 	ConfigReader(const string& path);
 	void readConfigFile(const string& path);
 
@@ -30,8 +34,12 @@ public:
 	T get(const string& Keys) const {
 		vector<string> subKeys;
 		splitPath(Keys, subKeys);
-		shared_lock<shared_mutex> sharedLock(mutex);
+		shared_lock<shared_mutex> sharedLock(mutex); //will be destroyed, even when next lines throws
+		if (dirty.load()) {
+			throw new json::invalid_key("ConfigReader::dirty is set, config file is not read in or corrupted");
+		}
 		json::jobject obj = jsonDoc;
+		sharedLock.unlock();
 		for (unsigned int i = 0; i < subKeys.size() - 1; i++) {
 			if (obj.is_array()) {
 				try {
@@ -61,7 +69,7 @@ public:
 		try {
 			foundKey = true;
 			return get<T>(Keys);
-		} catch (const json::invalid_key) {
+		} catch (...) {
 			foundKey = false;
 			return defaultValue;
 		}
@@ -77,5 +85,6 @@ private:
 	void splitPath(const string&, vector<string>&) const;
 	json::jobject jsonDoc;
 	mutable shared_mutex mutex;
+	atomic<bool> dirty = true;
 };
 #endif

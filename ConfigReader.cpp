@@ -13,18 +13,20 @@ ConfigReader::ConfigReader(const string& path) {
 }
 
 void ConfigReader::readConfigFile(const string& path) {
-	unique_lock<shared_mutex> uniqueLock(mutex);
+	dirty.store(true);
 	ifstream file(path, ifstream::in);
 	if (!file.is_open() || !file.good()) {
 		throw new parsing_error("ConfigReader cant open file, path: " + path);
 	}
 	string file_string((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
+	unique_lock<shared_mutex> uniqueLock(mutex);
 	try {
 		jsonDoc = json::jobject::parse(file_string);
 	}
 	catch (const json::parsing_error&) {
 		throw new parsing_error("ConfigReader encountered parsing error, path: " + path);
 	}
+	dirty.store(false);
 }
 
 void ConfigReader::splitPath(const string& keyPath, vector<string>& keys) const {
